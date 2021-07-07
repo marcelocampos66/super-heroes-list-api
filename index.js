@@ -12,7 +12,7 @@ app.use(bodyParser.json());
 app.use('/heroes', shlRouter); 
 
 app.use((err, _req, res, _next) => {
-  res.status(500).json({ message: err.message });
-}); //middleware error
+  return res.status(500).json({ message: err.message });
+}); //middleware internal server error
 
 app.listen(PORT, () => { console.log(`Online na porta ${PORT}`) });

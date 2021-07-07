@@ -1,8 +1,12 @@
 const express = require('express');
 const shlRouter = express.Router();
 
-// Rotas
+const {
+  getPageOfHeroesController,
+  getHeroByNameController,
+} = require('../controllers/shlController');
 
-// 
+shlRouter.get('/', getPageOfHeroesController);
+shlRouter.get('/:name', getHeroByNameController);
 
 module.exports = shlRouter;
