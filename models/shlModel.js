@@ -36,8 +36,15 @@ const getMyListOfHeroes = async (arrayOfIds) => {
   return result;
 };
 
+const getHeroById = async (id) => {
+  const result = await client
+    .db('projects').collection('heroes').findOne({ _id: ObjectId(id) });
+  return result
+};
+
 module.exports = {
   getOnePageOfHeroes,
   getHeroByName,
   getMyListOfHeroes,
+  getHeroById,
 };
