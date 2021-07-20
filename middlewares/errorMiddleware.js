@@ -1,4 +1,4 @@
-const client = require("../models/mongoConnection");
+// const client = require("../models/mongoConnection");
 
 module.exports = (err, _req, res, _next) => {
   // if (err.isJoi) {
@@ -13,7 +13,7 @@ module.exports = (err, _req, res, _next) => {
   //   });
   // }
 
-  client.close();
+  // client.close();
 
   return res.status(500).json({
     error: {
