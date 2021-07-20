@@ -6,11 +6,13 @@ const {
   getHeroByNameController,
   getMyListOfHeroesController,
   getHeroByIdController,
+  getHeroesQuantityController,
 } = require('../controllers/shlController');
 
-shlRouter.get('/', getPageOfHeroesController);
-shlRouter.get('/:id', getHeroByIdController);
 shlRouter.get('/search/:name', getHeroByNameController);
 shlRouter.get('/mylist/:arrayOfIds', getMyListOfHeroesController);
+shlRouter.get('/quantity', getHeroesQuantityController);
+shlRouter.get('/:id', getHeroByIdController);
+shlRouter.get('/', getPageOfHeroesController);
 
 module.exports = shlRouter;

@@ -42,9 +42,14 @@ const getHeroById = async (id) => {
   return result
 };
 
+const getHeroesQuantity = async () => (
+  client.db('projects').collection('heroes').countDocuments()
+);
+
 module.exports = {
   getOnePageOfHeroes,
   getHeroByName,
   getMyListOfHeroes,
   getHeroById,
+  getHeroesQuantity,
 };

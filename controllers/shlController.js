@@ -3,6 +3,7 @@ const {
   getHeroByNameService,
   getMyListOfHeroesService,
   getHeroByIdService,
+  getHeroesQuantityService,
 } = require('../services/shlService');
 
 const getPageOfHeroesController = async (req, res) => {
@@ -34,9 +35,16 @@ const getHeroByIdController = async (req, res) => {
   return res.status(code).json(response);
 };
 
+const getHeroesQuantityController = async (_req, res) => {
+  const result = await getHeroesQuantityService();
+  const { code, response } = result;
+  return res.status(code).json(response);
+};
+
 module.exports = {
   getPageOfHeroesController,
   getHeroByNameController,
   getMyListOfHeroesController,
   getHeroByIdController,
+  getHeroesQuantityController,
 };
