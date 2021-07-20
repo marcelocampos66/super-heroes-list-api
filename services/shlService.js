@@ -6,6 +6,7 @@ const {
   getHeroByName,
   getMyListOfHeroes,
   getHeroById,
+  getHeroesQuantity,
 } = require('../models/shlModel');
 
 const {
@@ -120,9 +121,24 @@ const getHeroByIdService = async (id) => {
   });
 }
 
+const getHeroesQuantityService = async () => {
+  const result = await getHeroesQuantity();
+  if (!result) {
+    return ({
+      code: HTTP_NOT_FOUND_STATUS,
+      reponse: contentNotFoundError,
+    });
+  }
+  return ({
+    code: HTTP_OK_STATUS,
+    response: { heroesQuantity: result },
+  });
+};
+
 module.exports = {
   getPageOfHeroesService,
   getHeroByNameService,
   getMyListOfHeroesService,
   getHeroByIdService,
+  getHeroesQuantityService,
 };
