@@ -1,5 +1,7 @@
-const User = require('../models/user');
+require('dotenv').config();
 const joi = require('joi');
+const jwt = require('jsonwebtoken');
+const { User, List } = require('../models');
 
 const {
   contentNotFoundError,
@@ -7,6 +9,7 @@ const {
 } = require('./errors');
 
 const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
+const secret = process.env.JWT_SECRET;
 
 const verifyUserInfos = (infos) => (
   joi.object({
@@ -16,6 +19,13 @@ const verifyUserInfos = (infos) => (
     password: joi.string().min(6).required(),
   }).validate(infos)
 );
+
+const verifyRegisterInfos = (infos) => (
+  joi.object({
+    userId: joi.number().required(),
+    heroId: joi.string().length(24).required(),
+  }).validate(infos)
+)
 
 const getUserByEmail = async (email) => {
   try {
@@ -29,7 +39,12 @@ const getUserByEmail = async (email) => {
 
 const getAllUsersService = async () => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      include: {
+        model: List, as: 'list',
+        attributes: { exclude: ['id', 'userId'] },
+      },
+    });
     if (!users) {
       return ({
         code: 404,
@@ -42,8 +57,26 @@ const getAllUsersService = async () => {
       code: 200,
       response: infos,
     });
-  } catch (e) {
-    return { error: e };
+  } catch (error) {
+    return { error };
+  }
+};
+
+const getUserByIdService = async (id) => {
+  try {
+    const user = await User.findOne({
+      where: { id },
+      include: {
+        model: List, as: 'list',
+        attributes: { exclude: ['id', 'userId'] },
+      },
+    });
+    return ({
+      code: 200,
+      response: user,
+    });
+  } catch (error) {
+    return { error };
   }
 };
 
@@ -63,18 +96,39 @@ const registerUserService = async (user) => {
   }
   newUser.role = 'user';
   try {
-    const { dataValues } = await User.create(newUser);
-    const { password, ...necessaryInfos } = dataValues;
+    const registeredUser = await User.create(newUser);
+    const { password, ...payload } = registeredUser.toJSON();
+    const jwtConfig = { expiresIn: '1d', algorithm: 'HS256' };
+    const token = jwt.sign(payload, secret, jwtConfig);
     return ({
       code: 201,
-      response: necessaryInfos,
+      response: { token },
     });
-  } catch (e) {
-    return { error: e };
+  } catch (error) {
+    return { error };
   }
 }
 
+const registerHeroOnListService = async (registerInfos) => {
+  const { error } = verifyRegisterInfos(registerInfos);
+  if (error) {
+    return { error };
+  }
+  const { userId, heroId } = registerInfos;
+  try {
+    const result = await List.create({ userId, heroId });
+    return ({
+      code: 201,
+      response: result.toJSON(),
+    });
+  } catch (error) {
+    return { error };
+  }
+};
+
 module.exports = {
   getAllUsersService,
+  getUserByIdService,
   registerUserService,
+  registerHeroOnListService,
 };
