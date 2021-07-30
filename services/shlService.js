@@ -7,7 +7,7 @@ const {
   getMyListOfHeroes,
   getHeroById,
   getHeroesQuantity,
-} = require('../models/shlModel');
+} = require('../shlModels/shlModel');
 
 const {
   contentNotFoundError,
