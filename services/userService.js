@@ -167,6 +167,19 @@ const registerHeroOnListService = async (registerInfos) => {
   }
 };
 
+const deleteHeroOfListService = async (registerInfos) => {
+  const { error } = verifyRegisterInfos(registerInfos);
+  if (error) {
+    return { error };
+  }
+  const { userId, heroId } = registerInfos;
+  try {
+    const result = await List.destroy({ where: { userId, heroId } });
+  } catch (error) {
+    return { error };
+  }
+};
+
 module.exports = {
   getAllUsersService,
   getUserByEmail,
@@ -174,4 +187,5 @@ module.exports = {
   getUserByIdService,
   registerUserService,
   registerHeroOnListService,
+  deleteHeroOfListService,
 };

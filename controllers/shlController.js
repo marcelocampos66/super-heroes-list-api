@@ -21,9 +21,8 @@ const getHeroByNameController = async (req, res) => {
 };
 
 const getMyListOfHeroesController = async (req, res) => {
-  const { params: { arrayOfIds } } = req;
-  const { ids } = JSON.parse(arrayOfIds);
-  const result = await getMyListOfHeroesService(ids);
+  const { list } = req;
+  const result = await getMyListOfHeroesService(list);
   const { code, response } = result;
   return res.status(code).json(response);
 };
