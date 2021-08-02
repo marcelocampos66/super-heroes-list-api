@@ -6,10 +6,12 @@ const { User, List } = require('../models');
 const {
   contentNotFoundError,
   userExistsError,
+  userUnexistsError,
 } = require('./errors');
 
 const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
 const secret = process.env.JWT_SECRET;
+const jwtConfig = { expiresIn: '1d', algorithm: 'HS256' };
 
 const verifyUserInfos = (infos) => (
   joi.object({
@@ -27,9 +29,29 @@ const verifyRegisterInfos = (infos) => (
   }).validate(infos)
 )
 
+const verifyLoginInfos = (infos) => (
+  joi.object({
+    email: joi.string().email().required(),
+    password: joi.string().min(6).required(),
+  }).validate(infos)
+)
+
 const getUserByEmail = async (email) => {
   try {
     const result = await User.findOne({ where: { email: email  } });
+    return result;
+  } catch (e) {
+    console.error(e.message);
+    return;
+  }
+}
+
+const getUserByEmailAndPassword = async (login) => {
+  const { email, password } = login;
+  try {
+    const user = await User.findOne({ where: { email, password } });
+    const result = user.dataValues
+    delete result.password;
     return result;
   } catch (e) {
     console.error(e.message);
@@ -80,6 +102,26 @@ const getUserByIdService = async (id) => {
   }
 };
 
+const loginUserService = async (login) => {
+  const { error } = verifyLoginInfos(login);
+  if (error) {
+    return { error };
+  }
+  const findUser = await getUserByEmailAndPassword(login);
+  if (!findUser) {
+    return ({
+      code: 422,
+      response: userUnexistsError,
+    })
+  }
+
+  const token = jwt.sign(findUser, secret, jwtConfig);
+  return ({
+    code: 201,
+    response: { token },
+  });
+}
+
 const registerUserService = async (user) => {
   const { name, age, email, password } = user;
   const { error } = verifyUserInfos({ name, age, email, password });
@@ -98,7 +140,6 @@ const registerUserService = async (user) => {
   try {
     const registeredUser = await User.create(newUser);
     const { password, ...payload } = registeredUser.toJSON();
-    const jwtConfig = { expiresIn: '1d', algorithm: 'HS256' };
     const token = jwt.sign(payload, secret, jwtConfig);
     return ({
       code: 201,
@@ -128,6 +169,8 @@ const registerHeroOnListService = async (registerInfos) => {
 
 module.exports = {
   getAllUsersService,
+  getUserByEmail,
+  loginUserService,
   getUserByIdService,
   registerUserService,
   registerHeroOnListService,

@@ -19,8 +19,16 @@ const userExistsError = {
   },
 };
 
+const userUnexistsError = {
+  err: {
+    type: 'invalid_data',
+    message: 'User or password incorrect.',
+  },
+};
+
 module.exports = {
   contentNotFoundError,
   invalidIdError,
   userExistsError,
+  userUnexistsError,
 };
