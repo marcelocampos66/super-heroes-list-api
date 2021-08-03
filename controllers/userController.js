@@ -26,8 +26,8 @@ const getAllUsersController = async (_req, res, next) => {
   return res.status(code).json(response);
 };
 
-const getUserByIdController = async (req, res, next) => {
-  const { params: { id } } = req;
+const getSelfUserController = async (req, res, next) => {
+  const { payload: { id } } = req;
   const result = await getUserByIdService(id);
   if (result.error) {
     return next(result.error);
@@ -81,7 +81,7 @@ const deleteHeroOfListController = async (req, res, next) => {
 module.exports = {
   deleteSelfController,
   getAllUsersController,
-  getUserByIdController,
+  getSelfUserController,
   loginController,
   registerUserController,
   registerHeroOnListController,

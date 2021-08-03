@@ -5,7 +5,7 @@ const validateJWT = require('../middlewares/validateJWT');
 
 const {
   getAllUsersController,
-  getUserByIdController,
+  getSelfUserController,
   loginController,
   registerUserController,
   registerHeroOnListController,
@@ -13,12 +13,15 @@ const {
 } = require('../controllers/userController');
 
 userRouter.get('/', getAllUsersController);
-userRouter.get('/:id', getUserByIdController);
 userRouter.post('/login', loginController);
 userRouter.post('/', registerUserController);
 userRouter.post('/:heroId', [
   validateJWT,
   registerHeroOnListController,
+]);
+userRouter.get('/selfuser', [
+  validateJWT,
+  getSelfUserController,
 ]);
 userRouter.delete('/:heroId', [
   validateJWT,
