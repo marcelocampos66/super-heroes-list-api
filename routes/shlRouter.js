@@ -2,6 +2,7 @@ const express = require('express');
 const shlRouter = express.Router();
 
 const validateJWT = require('../middlewares/validateJWT');
+const getList = require('../middlewares/getList');
 
 const {
   getPageOfHeroesController,
@@ -13,8 +14,9 @@ const {
 
 shlRouter.get('/search/:name', getHeroByNameController);
 shlRouter.get('/quantity', getHeroesQuantityController);
-shlRouter.get('/mylist/:arrayOfIds', [
+shlRouter.get('/mylist', [
   validateJWT,
+  getList,
   getMyListOfHeroesController,
 ]);
 shlRouter.get('/:id', [

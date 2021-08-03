@@ -27,10 +27,6 @@ const verifyHeroName = (name) => (
   joi.string().min(3).required().validate(name)
 );
 
-const verifyArrayOfIds = (ids) => (
-  joi.array().items(joi.string().length(24)).required().validate(ids)
-);
-
 const getPageOfHeroesService = async (page) => {
   const pageNumber = parseInt(page);
   const { error } = verifyPage(pageNumber);
@@ -79,15 +75,6 @@ const getHeroByNameService = async (name) => {
 };
 
 const getMyListOfHeroesService = async (ids) => {
-  const { error } = verifyArrayOfIds(ids);
-  if (error) {
-    const message = error.details[0].message;
-    const type = (error.details[0].type).replace('.', '_');
-    return ({
-      code: HTTP_UNPROCESSABLE_ENTITY_STATUS,
-      response: { type, message },
-    });
-  }
   const heroesList = await getMyListOfHeroes(ids);
   if (!heroesList) {
     return ({
@@ -102,12 +89,12 @@ const getMyListOfHeroesService = async (ids) => {
 };
 
 const getHeroByIdService = async (id) => {
-  if (!ObjectId.isValid(id)) {
-    return ({
-      code: HTTP_UNPROCESSABLE_ENTITY_STATUS,
-      response: invalidIdError,
-    });
-  }
+  // if (!ObjectId.isValid(id)) {
+  //   return ({
+  //     code: HTTP_UNPROCESSABLE_ENTITY_STATUS,
+  //     response: invalidIdError,
+  //   });
+  // }
   const hero = await getHeroById(id);
   if (!hero) {
     return ({
