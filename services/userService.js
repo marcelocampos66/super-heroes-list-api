@@ -19,6 +19,7 @@ const verifyUserInfos = (infos) => (
     age: joi.number().min(1).max(99).required(),
     email: joi.string().pattern(emailRegex).required(),
     password: joi.string().min(6).required(),
+    image: joi.string(),
   }).validate(infos)
 );
 
@@ -93,9 +94,10 @@ const getUserByIdService = async (id) => {
         attributes: { exclude: ['id', 'userId'] },
       },
     });
+    const { password, ...necessaryInfos } = user.toJSON();
     return ({
       code: 200,
-      response: user,
+      response: necessaryInfos,
     });
   } catch (error) {
     return { error };
@@ -175,6 +177,30 @@ const deleteHeroOfListService = async (registerInfos) => {
   const { userId, heroId } = registerInfos;
   try {
     const result = await List.destroy({ where: { userId, heroId } });
+    return ({ code: 204 });
+  } catch (error) {
+    return { error };
+  }
+};
+
+const updateUserInfosService = async (id, newInfos) => {
+  const { name, age, email, password, image } = newInfos;
+  try {
+    const update = await User.update(
+      { name, age, email, password, image },
+      { where: { id } },
+    );
+    const updatedUser = await User.findOne({
+      where: { id },
+      include: {
+        model: List, as: 'list',
+        attributes: { exclude: ['id', 'userId'] },
+      },
+    });
+    return ({
+      code: 200,
+      response: updatedUser,
+    });
   } catch (error) {
     return { error };
   }
@@ -188,4 +214,5 @@ module.exports = {
   registerUserService,
   registerHeroOnListService,
   deleteHeroOfListService,
+  updateUserInfosService,
 };
