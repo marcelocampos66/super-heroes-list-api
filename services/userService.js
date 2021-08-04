@@ -94,10 +94,9 @@ const getUserByIdService = async (id) => {
         attributes: { exclude: ['id', 'userId'] },
       },
     });
-    const { password, ...necessaryInfos } = user.toJSON();
     return ({
       code: 200,
-      response: necessaryInfos,
+      response: user.toJSON(),
     });
   } catch (error) {
     return { error };
@@ -116,8 +115,8 @@ const loginUserService = async (login) => {
       response: userUnexistsError,
     })
   }
-
-  const token = jwt.sign(findUser, secret, jwtConfig);
+  const { image, ...necessaryInfos } = findUser;
+  const token = jwt.sign(necessaryInfos, secret, jwtConfig);
   return ({
     code: 201,
     response: { token },
@@ -186,7 +185,7 @@ const deleteHeroOfListService = async (registerInfos) => {
 const updateUserInfosService = async (id, newInfos) => {
   const { name, age, email, password, image } = newInfos;
   try {
-    const update = await User.update(
+    await User.update(
       { name, age, email, password, image },
       { where: { id } },
     );
