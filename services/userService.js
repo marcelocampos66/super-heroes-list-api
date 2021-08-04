@@ -118,18 +118,18 @@ const loginUserService = async (login) => {
   const { image, ...necessaryInfos } = findUser;
   const token = jwt.sign(necessaryInfos, secret, jwtConfig);
   return ({
-    code: 201,
+    code: 200,
     response: { token },
   });
 }
 
 const registerUserService = async (user) => {
-  const { name, age, email, password } = user;
-  const { error } = verifyUserInfos({ name, age, email, password });
+  const { name, age, email, password, image } = user;
+  const { error } = verifyUserInfos({ name, age, email, password, image });
   if (error) {
     return { error };
   }
-  const newUser = { name, age, email, password };
+  const newUser = { name, age, email, password, image };
   const userExists = await getUserByEmail(email);
   if (userExists) {
     return ({
@@ -140,7 +140,7 @@ const registerUserService = async (user) => {
   newUser.role = 'user';
   try {
     const registeredUser = await User.create(newUser);
-    const { password, ...payload } = registeredUser.toJSON();
+    const { password, image, ...payload } = registeredUser.toJSON();
     const token = jwt.sign(payload, secret, jwtConfig);
     return ({
       code: 201,
