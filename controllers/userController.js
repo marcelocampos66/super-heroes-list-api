@@ -5,6 +5,7 @@ const {
   registerUserService,
   registerHeroOnListService,
   deleteHeroOfListService,
+  updateUserInfosService,
 } = require('../services/userService')
 
 const deleteSelfController = async (req, res, next) => {
@@ -74,6 +75,16 @@ const deleteHeroOfListController = async (req, res, next) => {
   if (result.error) {
     return next(result.error);
   }
+  const { code } = result;
+  return res.status(code).end();
+};
+
+const updateUserInfosController = async (req, res, next) => {
+  const { payload: { id }, body } = req;
+  const result = await updateUserInfosService(id, body);
+  if (result.error) {
+    return next(result.error);
+  }
   const { code, response } = result;
   return res.status(code).json(response);
 };
@@ -86,4 +97,5 @@ module.exports = {
   registerUserController,
   registerHeroOnListController,
   deleteHeroOfListController,
+  updateUserInfosController,
 };

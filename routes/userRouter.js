@@ -10,6 +10,7 @@ const {
   registerUserController,
   registerHeroOnListController,
   deleteHeroOfListController,
+  updateUserInfosController,
 } = require('../controllers/userController');
 
 userRouter.get('/', getAllUsersController);
@@ -26,6 +27,10 @@ userRouter.get('/selfuser', [
 userRouter.delete('/:heroId', [
   validateJWT,
   deleteHeroOfListController,
+]);
+userRouter.put('/update-infos', [
+  validateJWT,
+  updateUserInfosController,
 ]);
 // userRouter.delete('/', deleteSelf);
 
