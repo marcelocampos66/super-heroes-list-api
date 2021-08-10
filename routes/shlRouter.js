@@ -12,7 +12,7 @@ const {
   getHeroesQuantityController,
 } = require('../controllers/shlController');
 
-shlRouter.get('/search/:name', getHeroByNameController);
+shlRouter.get('/search', getHeroByNameController);
 shlRouter.get('/quantity', getHeroesQuantityController);
 shlRouter.get('/mylist', [
   validateJWT,
