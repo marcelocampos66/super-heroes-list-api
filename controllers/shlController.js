@@ -14,7 +14,7 @@ const getPageOfHeroesController = async (req, res) => {
 };
 
 const getHeroByNameController = async (req, res) => {
-  const { params: { name } } = req;
+  const { query: { name } } = req;
   const result = await getHeroByNameService(name);
   const { code, response } = result;
   return res.status(code).json(response);
