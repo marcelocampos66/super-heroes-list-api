@@ -6,38 +6,61 @@ const {
   getHeroesQuantityService,
 } = require('../services/shlService');
 
-const getPageOfHeroesController = async (req, res) => {
+const STATUS = {
+  ok: 200,
+  created: 201,
+  no_content: 204,
+  not_found: 404,
+  unprocessable_entity: 422,
+};
+
+const getPageOfHeroesController = async (req, res, next)=> {
   const { query: { page } } = req;
   const result = await getPageOfHeroesService(page);
-  const { code, response } = result;
-  return res.status(code).json(response);
+  if (result.error) {
+    return next(result.error);
+  }
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
-const getHeroByNameController = async (req, res) => {
+const getHeroByNameController = async (req, res, next) => {
   const { query: { name } } = req;
   const result = await getHeroByNameService(name);
-  const { code, response } = result;
-  return res.status(code).json(response);
+  if (result.error) {
+    return next(result.error);
+  }
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
-const getMyListOfHeroesController = async (req, res) => {
+const getMyListOfHeroesController = async (req, res, next) => {
   const { list } = req;
   const result = await getMyListOfHeroesService(list);
-  const { code, response } = result;
-  return res.status(code).json(response);
+  if (result.error) {
+    return next(result.error);
+  }
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 const getHeroByIdController = async (req, res) => {
   const { params: { id } } = req;
   const result = await getHeroByIdService(id);
-  const { code, response } = result;
-  return res.status(code).json(response);
+  if (result.error) {
+    return next(result.error);
+  }
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 const getHeroesQuantityController = async (_req, res) => {
   const result = await getHeroesQuantityService();
-  const { code, response } = result;
-  return res.status(code).json(response);
+  if (result.error) {
+    return next(result.error);
+  }
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 module.exports = {

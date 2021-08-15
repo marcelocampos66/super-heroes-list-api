@@ -7,15 +7,6 @@ const getOnePageOfHeroes = async (page) => {
   const result = await client.db("projects").collection("heroes")
       .find({}).limit(itemsByPage).skip(toSkip).toArray();
     return result;
-  // try {
-  //   await client.connect();
-  //   const result = await client.db("projects").collection("heroes")
-  //     .find({}).limit(itemsByPage).skip(toSkip).toArray();
-  //   return result;
-  // } catch (error) {
-  //   client.close();
-  //   console.error(error);
-  // }
 };
 
 const getHeroByName = async (name) => {

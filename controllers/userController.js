@@ -8,14 +8,11 @@ const {
   updateUserInfosService,
 } = require('../services/userService')
 
-const deleteSelfController = async (req, res, next) => {
-  // const { body } = req;
-  // const result = await loginUserService(body);
-  // if (result.error) {
-  //   return next(result.error);
-  // }
-  // const { code, response } = result;
-  // return res.status(code).json(response);
+const STATUS = {
+  ok: 200,
+  created: 201,
+  no_content: 204,
+  not_found: 404,
 };
 
 const getAllUsersController = async (_req, res, next) => {
@@ -23,8 +20,8 @@ const getAllUsersController = async (_req, res, next) => {
   if (result.error) {
     return next(result.error);
   }
-  const { code, response } = result;
-  return res.status(code).json(response);
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 const getSelfUserController = async (req, res, next) => {
@@ -33,18 +30,18 @@ const getSelfUserController = async (req, res, next) => {
   if (result.error) {
     return next(result.error);
   }
-  const { code, response } = result;
-  return res.status(code).json(response);
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 const loginController = async (req, res, next) => {
-  const { body } = req;
-  const result = await loginUserService(body);
+  const { body: { email, password } } = req;
+  const result = await loginUserService({ email, password });
   if (result.error) {
     return next(result.error);
   }
-  const { code, response } = result;
-  return res.status(code).json(response);
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 const registerUserController = async (req, res, next) => {
@@ -53,8 +50,8 @@ const registerUserController = async (req, res, next) => {
   if (result.error) {
     return next(result.error);
   }
-  const { code, response } = result;
-  return res.status(code).json(response);
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 const registerHeroOnListController = async (req, res, next) => {
@@ -64,8 +61,8 @@ const registerHeroOnListController = async (req, res, next) => {
   if (result.error) {
     return next(result.error);
   }
-  const { code, response } = result;
-  return res.status(code).json(response);
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 const deleteHeroOfListController = async (req, res, next) => {
@@ -75,8 +72,8 @@ const deleteHeroOfListController = async (req, res, next) => {
   if (result.error) {
     return next(result.error);
   }
-  const { code } = result;
-  return res.status(code).end();
+  const { type } = result;
+  return res.status(STATUS[type]).end();
 };
 
 const updateUserInfosController = async (req, res, next) => {
@@ -85,12 +82,11 @@ const updateUserInfosController = async (req, res, next) => {
   if (result.error) {
     return next(result.error);
   }
-  const { code, response } = result;
-  return res.status(code).json(response);
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
 };
 
 module.exports = {
-  deleteSelfController,
   getAllUsersController,
   getSelfUserController,
   loginController,

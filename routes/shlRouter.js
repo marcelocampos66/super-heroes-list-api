@@ -1,8 +1,10 @@
 const express = require('express');
 const shlRouter = express.Router();
 
-const validateJWT = require('../middlewares/validateJWT');
 const getList = require('../middlewares/getList');
+const validateJWT = require('../middlewares/validateJWT');
+const validatePage = require('../middlewares/validatePage');
+const validateHeroName = require('../middlewares/validateHeroName');
 
 const {
   getPageOfHeroesController,
@@ -12,7 +14,10 @@ const {
   getHeroesQuantityController,
 } = require('../controllers/shlController');
 
-shlRouter.get('/search', getHeroByNameController);
+shlRouter.get('/search', [
+  validateHeroName,
+  getHeroByNameController,
+]);
 shlRouter.get('/quantity', getHeroesQuantityController);
 shlRouter.get('/mylist', [
   validateJWT,
@@ -25,6 +30,7 @@ shlRouter.get('/:id', [
 ]);
 shlRouter.get('/', [
   validateJWT,
+  validatePage,
   getPageOfHeroesController,
 ]);
 

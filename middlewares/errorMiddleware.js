@@ -1,7 +1,10 @@
 module.exports = (err, _req, res, _next) => {
   if (err.isJoi) {
     return res.status(422).json({
-      error: { message: err.details[0].message },
+      error: {
+        type: 'invalid_data',
+        message: err.details[0].message
+      },
     });
   }
 
