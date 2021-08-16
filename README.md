@@ -51,7 +51,11 @@
 <br>
 
 <h4>Super Heroes:<h4>
-<li></li
+<li>'GET /heroes?page=' - Esse endpoint recebe via queryString o número de uma página, que caso seja um valor válido, retorna um array com 12 heróis (uma página), referente ao número que foi passado via query.</li>
+<li>'GET /heroes/:id' - Esse endpoint recebe via parametro o id de um herói, que se for válido, retorna um objeto com todos os dados do herói.'</li>
+<li>'GET /heroes/mylist' - Esse endpoint traz a lista personalizada de heróis do usuário autenticado.</li>
+<li>'GET /heroes/quantity' - Esse endpoint traz a quantidade de heróis cadastrados no banco de dados.</li>
+<li>'GET /heroes/search?name=' - Esse endpoint recebe via queryString um termo de pesquisa, é realizada uma busca no banco de dados por todos os heróis que possuírem no nome o termo buscado, são todos retornados dentro de um array, caso não seja encontrado nenhum herói, é retornado um array vazio.</li>
 
 <br>
 <br>
