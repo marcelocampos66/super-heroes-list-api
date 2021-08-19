@@ -44,7 +44,7 @@ const getMyListOfHeroesService = async (ids) => {
     if (!heroesList) {
       return ({
         type: 'not_found',
-        response: contentNotFoundError.err,
+        response: contentNotFoundError,
       });
     };
     return ({
@@ -68,7 +68,7 @@ const getHeroByIdService = async (id) => {
     if (!hero) {
       return ({
         type: 'not_found',
-        response: contentNotFoundError.err,
+        response: contentNotFoundError,
       });
     }
     return ({

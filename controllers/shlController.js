@@ -14,7 +14,7 @@ const STATUS = {
   unprocessable_entity: 422,
 };
 
-const getPageOfHeroesController = async (req, res, next)=> {
+const getPageOfHeroesController = async (req, res, next) => {
   const { query: { page } } = req;
   const result = await getPageOfHeroesService(page);
   if (result.error) {

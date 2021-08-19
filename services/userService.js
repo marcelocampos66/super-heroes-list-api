@@ -70,7 +70,7 @@ const loginUserService = async (login) => {
   const findUser = await getUserByEmailAndPassword(login);
   if (!findUser) {
     return ({
-      code: 422,
+      type: 'not_found',
       response: userUnexistsError,
     })
   }
