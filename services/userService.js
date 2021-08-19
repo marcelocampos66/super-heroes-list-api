@@ -5,7 +5,7 @@ const { User, List } = require('../models');
 const {
   contentNotFoundError,
   userUnexistsError,
-} = require('../error/errors');
+} = require('../utils/errors');
 
 const secret = process.env.JWT_SECRET;
 const jwtConfig = { expiresIn: '1d', algorithm: 'HS256' };
@@ -153,7 +153,6 @@ const recoverPasswordService = async (email) => {
         type: 'not_found',
         response: userUnexistsError,
       });
-      // return userUnexistsError;
     }
     const { password, name } = user;
     await transporter.sendMail({
@@ -161,6 +160,7 @@ const recoverPasswordService = async (email) => {
       subject: 'Password recovery',
       from: 'Super Heroes List Team <superheroeslist.contato@gmail.com>',
       to: email,
+      // html: `<p>HTML version of the message: ${password}</p>`,
     });
     return ({
       type: 'ok',

@@ -1,6 +1,6 @@
 const { User } = require('../models');
 
-const { userExistsError } = require('../error/errors');
+const { userExistsError } = require('../utils/errors');
 
 const getUserByEmail = async (email) => {
   try {

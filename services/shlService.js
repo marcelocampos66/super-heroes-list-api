@@ -11,7 +11,7 @@ const {
 const {
   contentNotFoundError,
   invalidIdError,
-} = require('../error/errors');
+} = require('../utils/errors');
 
 const getPageOfHeroesService = async (page) => {
   const pageNumber = parseInt(page);

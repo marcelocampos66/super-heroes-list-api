@@ -47,7 +47,6 @@ userRouter.put('/update-infos', [
   validateUserInfos,
   updateUserInfosController,
 ]);
-
-userRouter.post('/recover/recovery-password', recoverPasswordController);
+userRouter.post('/recover/password', recoverPasswordController);
 
 module.exports = userRouter;
