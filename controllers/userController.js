@@ -6,6 +6,7 @@ const {
   registerHeroOnListService,
   deleteHeroOfListService,
   updateUserInfosService,
+  recoverPasswordService,
 } = require('../services/userService')
 
 const STATUS = {
@@ -86,6 +87,16 @@ const updateUserInfosController = async (req, res, next) => {
   return res.status(STATUS[type]).json(response);
 };
 
+const recoverPasswordController = async (req, res, next) => {
+  const { body: { email } } = req;
+  const result =  await recoverPasswordService(email);
+  if (result.error) {
+    return next(result.error);
+  }
+  const { type, response } = result;
+  return res.status(STATUS[type]).json(response);
+};
+
 module.exports = {
   getAllUsersController,
   getSelfUserController,
@@ -94,4 +105,5 @@ module.exports = {
   registerHeroOnListController,
   deleteHeroOfListController,
   updateUserInfosController,
+  recoverPasswordController,
 };

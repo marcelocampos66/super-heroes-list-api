@@ -9,6 +9,7 @@ const {
 
 const secret = process.env.JWT_SECRET;
 const jwtConfig = { expiresIn: '1d', algorithm: 'HS256' };
+const transporter = require('../utils/transporter');
 
 const getUserByEmailAndPassword = async (login) => {
   const { email, password } = login;
@@ -144,6 +145,32 @@ const updateUserInfosService = async (id, newInfos) => {
   }
 };
 
+const recoverPasswordService = async (email) => {
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return ({
+        type: 'not_found',
+        response: userUnexistsError,
+      });
+      // return userUnexistsError;
+    }
+    const { password, name } = user;
+    await transporter.sendMail({
+      text: `Hello ${name}!\n \nYour password is: ${password}\n \nThanks!`,
+      subject: 'Password recovery',
+      from: 'Super Heroes List Team <superheroeslist.contato@gmail.com>',
+      to: email,
+    });
+    return ({
+      type: 'ok',
+      response: { message: 'Email enviado com sucesso!' }
+    });
+  } catch (error) {
+    return { error };
+  }
+}
+
 module.exports = {
   getAllUsersService,
   loginUserService,
@@ -152,4 +179,5 @@ module.exports = {
   registerHeroOnListService,
   deleteHeroOfListService,
   updateUserInfosService,
+  recoverPasswordService,
 };

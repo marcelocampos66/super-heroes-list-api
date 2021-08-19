@@ -15,6 +15,7 @@ const {
   registerHeroOnListController,
   deleteHeroOfListController,
   updateUserInfosController,
+  recoverPasswordController,
 } = require('../controllers/userController');
 
 userRouter.get('/', getAllUsersController);
@@ -46,5 +47,7 @@ userRouter.put('/update-infos', [
   validateUserInfos,
   updateUserInfosController,
 ]);
+
+userRouter.post('/recover/recovery-password', recoverPasswordController);
 
 module.exports = userRouter;

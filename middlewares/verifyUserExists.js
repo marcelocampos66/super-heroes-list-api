@@ -16,7 +16,7 @@ module.exports = async (req, res, next) => {
   const { body: { email } } = req;
   const userExists = await getUserByEmail(email);
   if (userExists) {
-    return res.status(422).json({ error: userExistsError.err });
+    return res.status(422).json(userExistsError);
   }
   return next();
 };
