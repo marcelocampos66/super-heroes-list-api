@@ -5,14 +5,30 @@ const validAdminCredentials = {
   password: 'admin123',
 }
 
+const validUserCredentials = {
+  email: 'magni.thorson@email.com',
+  password: 'asgard123',
+}
+
+const invalidCredentials = {
+  email: 'test@email.com',
+  password: 'senhaquenaoexiste',
+};
+
 const validAdminUser = {
-  id: 3,
-  name: "admin",
-  password: "admin123",
+  name: 'admin',
+  password: 'admin123',
   age: 99,
-  email: "root@email.com",
-  role: "admin",
+  email: 'root@email.com',
+  role: 'admin',
   image: null,
+};
+
+const validUserToRegister = {
+  name: 'Magni Thorson',
+  password: 'asgard123',
+  age: 30,
+  email: 'magni.thorson@email.com',
 };
 
 const mockPageOfHeroes = [
@@ -499,4 +515,5 @@ module.exports = {
   validAdminCredentials,
   validAdminUser,
   mockPageOfHeroes,
+  invalidCredentials,
 };
