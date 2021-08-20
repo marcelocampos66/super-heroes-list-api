@@ -3,7 +3,6 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const client = require('../shlModels/mongoConnection');
 const errorMiddleware = require('../middlewares/errorMiddleware');
 const shlRouter = require('../routes/shlRouter');
 const userRouter = require('../routes/userRouter');
@@ -15,8 +14,6 @@ app.use(cors({
   origin: '*',
   credentials: true,
 }));
-
-client.connect();
 
 app.use('/users', userRouter)
 app.use('/heroes', shlRouter); 

@@ -1,8 +1,23 @@
 require('dotenv').config();
 const { MongoClient } = require('mongodb');
 
-const uri = process.env.ATLAS_MONGO_URI;
+const URI = process.env.ATLAS_MONGO_URI;
 
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// const client = new MongoClient(URI, { useNewUrlParser: true, useUnifiedTopology: true });
+// module.exports = client;
 
-module.exports = client;
+const OPTIONS = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}
+
+const connection = () => {
+return MongoClient.connect(URI, OPTIONS)
+  .then((conn) => conn.db('projects'))
+  .catch((err) => {
+    console.error(err);
+    process.exit();
+});
+}
+
+module.exports = connection;
