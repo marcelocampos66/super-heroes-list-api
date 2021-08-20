@@ -3,9 +3,6 @@ const { MongoClient } = require('mongodb');
 
 const URI = process.env.ATLAS_MONGO_URI;
 
-// const client = new MongoClient(URI, { useNewUrlParser: true, useUnifiedTopology: true });
-// module.exports = client;
-
 const OPTIONS = {
   useNewUrlParser: true,
   useUnifiedTopology: true,

@@ -13,10 +13,6 @@ const validAdminUser = {
   email: "root@email.com",
   role: "admin",
   image: null,
-  list: [
-    { "heroId": "60e8cef2849ece5d484ff62b" },
-    { "heroId": "60e8cef2849ece5d484ff622" },
-  ],
 };
 
 const mockPageOfHeroes = [
