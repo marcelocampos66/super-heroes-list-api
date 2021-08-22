@@ -104,7 +104,7 @@ const registerHeroOnListService = async (registerInfos) => {
   try {
     const result = await List.create({ userId, heroId });
     return ({
-      type: 'ok',
+      type: 'created',
       response: result.toJSON(),
     });
   } catch (error) {

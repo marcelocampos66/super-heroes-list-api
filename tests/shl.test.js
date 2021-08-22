@@ -124,25 +124,33 @@ describe('Testa o Router SHL', () => {
       it('retorna o código de status 401', () => {
         expect(response).to.have.status(401);
       });
-  
+
       it('retorna um objeto', () => {
         expect(response.body).to.be.a('object');
       });
   
+      it('o objeto possui a propriedade "error"', () => {
+        expect(response.body).to.have.property('error');
+      });
+  
+      it('a propriedade "error" eh um objeto', () => {
+        expect(response.body.error).to.be.a('object');
+      });
+  
       it('o objeto possui a propriedade "type"', () => {
-        expect(response.body).to.have.property('type');
+        expect(response.body.error).to.have.property('type');
       });
   
       it('o objeto possui a propriedade "message"', () => {
-        expect(response.body).to.have.property('message');
+        expect(response.body.error).to.have.property('message');
       });
   
       it('a propriedade "type" tem o valor "invalid_token"', () => {
-        expect(response.body.type).to.be.equal('invalid_token');
+        expect(response.body.error.type).to.be.equal('invalid_token');
       });
   
-      it('a propriedade "message" tem o valor "Token not found"', () => {
-        expect(response.body.message).to.be.equal('Token not found');
+      it('a propriedade "message" tem o valor: Token not found', () => {
+        expect(response.body.error.message).to.be.equal('Token not found');
       });
   
     });
@@ -237,25 +245,33 @@ describe('Testa o Router SHL', () => {
       it('retorna o código de status 401', () => {
         expect(response).to.have.status(401);
       });
-  
+
       it('retorna um objeto', () => {
         expect(response.body).to.be.a('object');
       });
   
+      it('o objeto possui a propriedade "error"', () => {
+        expect(response.body).to.have.property('error');
+      });
+  
+      it('a propriedade "error" eh um objeto', () => {
+        expect(response.body.error).to.be.a('object');
+      });
+  
       it('o objeto possui a propriedade "type"', () => {
-        expect(response.body).to.have.property('type');
+        expect(response.body.error).to.have.property('type');
       });
   
       it('o objeto possui a propriedade "message"', () => {
-        expect(response.body).to.have.property('message');
+        expect(response.body.error).to.have.property('message');
       });
   
       it('a propriedade "type" tem o valor "invalid_token"', () => {
-        expect(response.body.type).to.be.equal('invalid_token');
+        expect(response.body.error.type).to.be.equal('invalid_token');
       });
   
-      it('a propriedade "message" tem o valor "Token not found"', () => {
-        expect(response.body.message).to.be.equal('Token not found');
+      it('a propriedade "message" tem o valor: Token not found', () => {
+        expect(response.body.error.message).to.be.equal('Token not found');
       });
   
     });
@@ -358,26 +374,35 @@ describe('Testa o Router SHL', () => {
       it('retorna o código de status 401', () => {
         expect(response).to.have.status(401);
       });
-  
+
       it('retorna um objeto', () => {
         expect(response.body).to.be.a('object');
       });
   
+      it('o objeto possui a propriedade "error"', () => {
+        expect(response.body).to.have.property('error');
+      });
+  
+      it('a propriedade "error" eh um objeto', () => {
+        expect(response.body.error).to.be.a('object');
+      });
+  
       it('o objeto possui a propriedade "type"', () => {
-        expect(response.body).to.have.property('type');
+        expect(response.body.error).to.have.property('type');
       });
   
       it('o objeto possui a propriedade "message"', () => {
-        expect(response.body).to.have.property('message');
+        expect(response.body.error).to.have.property('message');
       });
   
       it('a propriedade "type" tem o valor "invalid_token"', () => {
-        expect(response.body.type).to.be.equal('invalid_token');
+        expect(response.body.error.type).to.be.equal('invalid_token');
       });
   
-      it('a propriedade "message" tem o valor "Token not found"', () => {
-        expect(response.body.message).to.be.equal('Token not found');
+      it('a propriedade "message" tem o valor: Token not found', () => {
+        expect(response.body.error.message).to.be.equal('Token not found');
       });
+      
     });
   
   });

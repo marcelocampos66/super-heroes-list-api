@@ -3,12 +3,7 @@ const { ObjectId } = require('mongodb');
 const validAdminCredentials = {
   email: 'root@email.com',
   password: 'admin123',
-}
-
-const validUserCredentials = {
-  email: 'magni.thorson@email.com',
-  password: 'asgard123',
-}
+};
 
 const invalidCredentials = {
   email: 'test@email.com',
@@ -29,6 +24,58 @@ const validUserToRegister = {
   password: 'asgard123',
   age: 30,
   email: 'magni.thorson@email.com',
+};
+
+const userToRegisterWithShortName = {
+  name: 'Ma',
+  password: 'asgard123',
+  age: 30,
+  email: 'magni.thorson@email.com',
+};
+
+const userToRegisterWithoutName = {
+  password: 'asgard123',
+  age: 30,
+  email: 'magni.thorson@email.com',
+};
+
+const userToRegisterWithoutAge = {
+  name: 'Magni Thorson',
+  password: 'asgard123',
+  email: 'magni.thorson@email.com',
+};
+
+const userToRegisterWithInvalidAge = {
+  name: 'Magni Thorson',
+  password: 'asgard123',
+  age: 0,
+  email: 'magni.thorson@email.com',
+};
+
+const userToRegisterWithoutPassword = {
+  name: 'Magni Thorson',
+  age: 30,
+  email: 'magni.thorson@email.com',
+};
+
+const userToRegisterWithInvalidPassword = {
+  name: 'Magni Thorson',
+  password: '123',
+  age: 30,
+  email: 'magni.thorson@email.com',
+};
+
+const userToRegisterWithoutEmail = {
+  name: 'Magni Thorson',
+  password: 'asgard123',
+  age: 30,
+};
+
+const userToRegisterWithInvalidEmail = {
+  name: 'Magni Thorson',
+  password: 'asgard123',
+  age: 30,
+  email: 'email.tudoerrado.email.com',
 };
 
 const mockPageOfHeroes = [
@@ -516,4 +563,13 @@ module.exports = {
   validAdminUser,
   mockPageOfHeroes,
   invalidCredentials,
+  validUserToRegister,
+  userToRegisterWithShortName,
+  userToRegisterWithoutName,
+  userToRegisterWithoutAge,
+  userToRegisterWithInvalidAge,
+  userToRegisterWithoutPassword,
+  userToRegisterWithInvalidPassword,
+  userToRegisterWithoutEmail,
+  userToRegisterWithInvalidEmail,
 };
