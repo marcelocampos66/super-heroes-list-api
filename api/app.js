@@ -10,10 +10,13 @@ const userRouter = require('../routes/userRouter');
 const app = express();
 
 app.use(bodyParser.json());
-app.use(cors({
-  origin: '*',
-  credentials: true,
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cors());
+// app.use(cors({
+//   origin: '*',
+//   credentials: true,
+// }));
 
 app.use('/users', userRouter)
 app.use('/heroes', shlRouter); 
