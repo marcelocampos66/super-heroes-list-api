@@ -10,6 +10,8 @@ const db = {};
 
 let sequelize;
 
+console.log(`Estamos no ambiente de: ${env}`);
+
 if (env === 'development') {
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialectOptions: {

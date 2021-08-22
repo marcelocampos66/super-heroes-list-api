@@ -19,6 +19,7 @@ const {
   userToRegisterWithInvalidPassword,
   userToRegisterWithoutEmail,
   userToRegisterWithInvalidEmail,
+  validUserToUpdate,
 } = require('./mocks');
 
 describe('Testa o Router de Users', () => {
@@ -696,13 +697,229 @@ describe('Testa o Router de Users', () => {
         expect(response.body).to.be.empty;
       });
 
+      it('O registro do heroi foi deletado com sucesso', async () => {
+        const userId = 1;
+        const heroId = '60e8cef2849ece5d484ff618';
+        const registerExists = await List.findOne({ where: { userId, heroId } });
+        expect(registerExists).to.be.null;
+      });
+
     });
 
   });
 
-  describe('GET /selfuser', () => {});
+  describe('GET /selfuser', () => {
 
-  describe('', () => {});
+    describe('Falha ao buscar os dados do usuario, sem autenticacao', () => {
+      let response;
+  
+      before(async () => {
+        response = await chai
+          .request(server)
+          .get('/users/selfuser');
+      });
+
+      it('retorna o código de status 401', () => {
+        expect(response).to.have.status(401);
+      });
+
+      it('retorna um objeto', () => {
+        expect(response.body).to.be.a('object');
+      });
+  
+      it('o objeto possui a propriedade "error"', () => {
+        expect(response.body).to.have.property('error');
+      });
+  
+      it('a propriedade "error" eh um objeto', () => {
+        expect(response.body.error).to.be.a('object');
+      });
+  
+      it('o objeto possui a propriedade "type"', () => {
+        expect(response.body.error).to.have.property('type');
+      });
+  
+      it('o objeto possui a propriedade "message"', () => {
+        expect(response.body.error).to.have.property('message');
+      });
+  
+      it('a propriedade "type" tem o valor "invalid_token"', () => {
+        expect(response.body.error.type).to.be.equal('invalid_token');
+      });
+  
+      it('a propriedade "message" tem o valor: Token not found', () => {
+        expect(response.body.error.message).to.be.equal('Token not found');
+      });
+
+    });
+
+    describe('Busca os dados do usuario autenticado', () => {
+      let response;
+  
+      before(async () => {
+        response = await chai
+          .request(server)
+          .get('/users/selfuser')
+          .set('authorization', token);
+      });
+
+      it('retorna o código de status 200', () => {
+        expect(response).to.have.status(200);
+      });
+
+      it('retorna um objeto', () => {
+        expect(response.body).to.be.a('object');
+      });
+
+      it('o objeto possui a propriedade "id"', () => {
+        expect(response.body).to.have.property('id');
+      });
+
+      it('o objeto possui a propriedade "name"', () => {
+        expect(response.body).to.have.property('name');
+      });
+
+      it('o objeto possui a propriedade "age"', () => {
+        expect(response.body).to.have.property('age');
+      });
+
+      it('o objeto possui a propriedade "email"', () => {
+        expect(response.body).to.have.property('email');
+      });
+
+      it('o objeto possui a propriedade "password"', () => {
+        expect(response.body).to.have.property('password');
+      });
+
+      it('o objeto possui a propriedade "role"', () => {
+        expect(response.body).to.have.property('role');
+      });
+
+      it('o objeto possui a propriedade "image"', () => {
+        expect(response.body).to.have.property('image');
+      });
+
+      it('o objeto possui a propriedade "list"', () => {
+        expect(response.body).to.have.property('list');
+      });
+
+    });
+
+  });
+
+  describe('PUT /users/update-infos', () => {
+
+    describe('Falha ao fazer update do usuario sem autenticacao', () => {
+      let response;
+  
+      before(async () => {
+        response = await chai
+          .request(server)
+          .put('/users/update-infos')
+          .send(validUserToUpdate);
+      });
+
+      it('retorna o código de status 401', () => {
+        expect(response).to.have.status(401);
+      });
+
+      it('retorna um objeto', () => {
+        expect(response.body).to.be.a('object');
+      });
+  
+      it('o objeto possui a propriedade "error"', () => {
+        expect(response.body).to.have.property('error');
+      });
+  
+      it('a propriedade "error" eh um objeto', () => {
+        expect(response.body.error).to.be.a('object');
+      });
+  
+      it('o objeto possui a propriedade "type"', () => {
+        expect(response.body.error).to.have.property('type');
+      });
+  
+      it('o objeto possui a propriedade "message"', () => {
+        expect(response.body.error).to.have.property('message');
+      });
+  
+      it('a propriedade "type" tem o valor "invalid_token"', () => {
+        expect(response.body.error.type).to.be.equal('invalid_token');
+      });
+  
+      it('a propriedade "message" tem o valor: Token not found', () => {
+        expect(response.body.error.message).to.be.equal('Token not found');
+      });
+    });
+
+    describe('Faz o update das informacoes do usuario com sucesso', () => {
+      let response;
+      let magniToken;
+  
+      before(async () => {
+        const { email, password } = validUserToRegister;
+        await chai
+          .request(server)
+          .post('/users')
+          .send(validUserToRegister);
+
+        magniToken = await chai
+        .request(server)
+        .post('/users/login')
+        .send({ email, password })
+        .then((response) => response.body.token);
+
+        response = await chai
+          .request(server)
+          .put('/users/update-infos')
+          .set('authorization', magniToken)
+          .send(validUserToUpdate);
+      });
+  
+      after(async () => {
+        const { email } = validUserToRegister;
+        await User.destroy({ where: { email } });
+      });
+
+      it('retorna o código de status 200', () => {
+        expect(response).to.have.status(200);
+      });
+
+      it('retorna um objeto', () => {
+        expect(response.body).to.be.a('object');
+      });
+
+      it('o objeto possui a propriedade "name"', () => {
+        expect(response.body).to.have.property('name');
+      });
+
+      it('o objeto possui a propriedade "age"', () => {
+        expect(response.body).to.have.property('age');
+      });
+
+      it('o objeto possui a propriedade "email"', () => {
+        expect(response.body).to.have.property('email');
+      });
+
+      it('o objeto possui a propriedade "password"', () => {
+        expect(response.body).to.have.property('password');
+      });
+
+      it('O name foi atualizado', () => {
+        expect(response.body.name).to.be.equal(validUserToUpdate.name);
+      });
+
+      it('O password foi atualizado', () => {
+        expect(response.body.password).to.be.equal(validUserToUpdate.password);
+      });
+
+      it('O age foi atualizado', () => {
+        expect(response.body.age).to.be.equal(validUserToUpdate.age);
+      });
+
+    });
+
+  });
 
 });
 

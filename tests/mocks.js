@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 
 const validAdminCredentials = {
-  email: 'root@email.com',
+  email: 'superheroeslist.contato@gmail.com',
   password: 'admin123',
 };
 
@@ -14,7 +14,7 @@ const validAdminUser = {
   name: 'admin',
   password: 'admin123',
   age: 99,
-  email: 'root@email.com',
+  email: 'superheroeslist.contato@gmail.com',
   role: 'admin',
   image: null,
 };
@@ -76,6 +76,13 @@ const userToRegisterWithInvalidEmail = {
   password: 'asgard123',
   age: 30,
   email: 'email.tudoerrado.email.com',
+};
+
+const validUserToUpdate = {
+  name: 'Mighty Magni Thorson',
+  password: 'xablau123',
+  age: 35,
+  email: 'magni.thorson@email.com',
 };
 
 const mockPageOfHeroes = [
@@ -572,4 +579,5 @@ module.exports = {
   userToRegisterWithInvalidPassword,
   userToRegisterWithoutEmail,
   userToRegisterWithInvalidEmail,
+  validUserToUpdate,
 };

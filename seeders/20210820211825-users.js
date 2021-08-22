@@ -7,7 +7,7 @@ module.exports = {
         name: 'admin',
         password: 'admin123',
         age: 99,
-        email: 'root@email.com',
+        email: 'superheroeslist.contato@gmail.com',
         role: 'admin',
         image: null,
       },
