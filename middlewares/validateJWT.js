@@ -7,16 +7,20 @@ const validateJWT = (req, res, next) => {
   const { headers: { authorization } } = req;
   if (!authorization) {
     return res.status(401).json({
-      type: 'invalid_token',
-      message: 'Token not found',
+      error: {
+        type: 'invalid_token',
+        message: 'Token not found',
+      },
     });
   }
   try {
     const payload = jwt.verify(authorization, secret);
     if (!payload) {
       return res.status(401).json({
-        type: 'invalid_token',
-        message: 'Expired or invalid token',
+        error: {
+          type: 'invalid_token',
+          message: 'Expired or invalid token',
+        },
       });
     }
     req.payload = payload;
