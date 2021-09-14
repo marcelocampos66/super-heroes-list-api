@@ -1,5 +1,6 @@
 'use strict';
 
+require('dotenv').config();
 const fs = require('fs');
 const path = require('path');
 const Sequelize = require('sequelize');
@@ -12,7 +13,7 @@ let sequelize;
 
 console.log(`Estamos no ambiente de: ${env}`);
 
-if (env === 'development') {
+if (env === 'development' || env === 'production') {
   sequelize = new Sequelize(process.env.DATABASE_URL, {
     dialectOptions: {
       ssl: {
