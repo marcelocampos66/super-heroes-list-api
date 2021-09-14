@@ -1,51 +1,15 @@
 require('dotenv').config();
-const joi = require('joi');
 const jwt = require('jsonwebtoken');
 const { User, List } = require('../models');
 
 const {
   contentNotFoundError,
-  userExistsError,
   userUnexistsError,
-} = require('./errors');
+} = require('../utils/errors');
 
-const emailRegex = /^([A-Za-z0-9_\-.])+@([A-Za-z0-9_\-.])+\.([A-Za-z]{2,4})$/;
 const secret = process.env.JWT_SECRET;
 const jwtConfig = { expiresIn: '1d', algorithm: 'HS256' };
-
-const verifyUserInfos = (infos) => (
-  joi.object({
-    name: joi.string().min(3).required(),
-    age: joi.number().min(1).max(99).required(),
-    email: joi.string().pattern(emailRegex).required(),
-    password: joi.string().min(6).required(),
-    image: joi.string(),
-  }).validate(infos)
-);
-
-const verifyRegisterInfos = (infos) => (
-  joi.object({
-    userId: joi.number().required(),
-    heroId: joi.string().length(24).required(),
-  }).validate(infos)
-)
-
-const verifyLoginInfos = (infos) => (
-  joi.object({
-    email: joi.string().email().required(),
-    password: joi.string().min(6).required(),
-  }).validate(infos)
-)
-
-const getUserByEmail = async (email) => {
-  try {
-    const result = await User.findOne({ where: { email: email  } });
-    return result;
-  } catch (e) {
-    console.error(e.message);
-    return;
-  }
-}
+const transporter = require('../utils/transporter');
 
 const getUserByEmailAndPassword = async (login) => {
   const { email, password } = login;
@@ -70,14 +34,14 @@ const getAllUsersService = async () => {
     });
     if (!users) {
       return ({
-        code: 404,
+        type: 'not_found',
         response: contentNotFoundError,
       });
     }
     const infos = users
       .map(({ dataValues: { password, ...necessaryInfos }}) => necessaryInfos);
     return ({
-      code: 200,
+      type: 'ok',
       response: infos,
     });
   } catch (error) {
@@ -95,7 +59,7 @@ const getUserByIdService = async (id) => {
       },
     });
     return ({
-      code: 200,
+      type: 'ok',
       response: user.toJSON(),
     });
   } catch (error) {
@@ -104,46 +68,30 @@ const getUserByIdService = async (id) => {
 };
 
 const loginUserService = async (login) => {
-  const { error } = verifyLoginInfos(login);
-  if (error) {
-    return { error };
-  }
   const findUser = await getUserByEmailAndPassword(login);
   if (!findUser) {
     return ({
-      code: 422,
+      type: 'not_found',
       response: userUnexistsError,
     })
   }
   const { image, ...necessaryInfos } = findUser;
   const token = jwt.sign(necessaryInfos, secret, jwtConfig);
   return ({
-    code: 200,
+    type: 'ok',
     response: { token },
   });
 }
 
 const registerUserService = async (user) => {
   const { name, age, email, password, image } = user;
-  const { error } = verifyUserInfos({ name, age, email, password, image });
-  if (error) {
-    return { error };
-  }
-  const newUser = { name, age, email, password, image };
-  const userExists = await getUserByEmail(email);
-  if (userExists) {
-    return ({
-      code: 422,
-      response: userExistsError,
-    })
-  }
-  newUser.role = 'user';
+  const newUser = { name, age, email, password, image, role: 'user' };
   try {
     const registeredUser = await User.create(newUser);
     const { password, image, ...payload } = registeredUser.toJSON();
     const token = jwt.sign(payload, secret, jwtConfig);
     return ({
-      code: 201,
+      type: 'created',
       response: { token },
     });
   } catch (error) {
@@ -152,15 +100,11 @@ const registerUserService = async (user) => {
 }
 
 const registerHeroOnListService = async (registerInfos) => {
-  const { error } = verifyRegisterInfos(registerInfos);
-  if (error) {
-    return { error };
-  }
   const { userId, heroId } = registerInfos;
   try {
     const result = await List.create({ userId, heroId });
     return ({
-      code: 201,
+      type: 'created',
       response: result.toJSON(),
     });
   } catch (error) {
@@ -169,14 +113,10 @@ const registerHeroOnListService = async (registerInfos) => {
 };
 
 const deleteHeroOfListService = async (registerInfos) => {
-  const { error } = verifyRegisterInfos(registerInfos);
-  if (error) {
-    return { error };
-  }
   const { userId, heroId } = registerInfos;
   try {
-    const result = await List.destroy({ where: { userId, heroId } });
-    return ({ code: 204 });
+    await List.destroy({ where: { userId, heroId } });
+    return ({ type: 'no_content' });
   } catch (error) {
     return { error };
   }
@@ -197,7 +137,7 @@ const updateUserInfosService = async (id, newInfos) => {
       },
     });
     return ({
-      code: 200,
+      type: 'ok',
       response: updatedUser,
     });
   } catch (error) {
@@ -205,13 +145,39 @@ const updateUserInfosService = async (id, newInfos) => {
   }
 };
 
+const recoverPasswordService = async (email) => {
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      return ({
+        type: 'not_found',
+        response: userUnexistsError,
+      });
+    }
+    const { password, name } = user;
+    await transporter.sendMail({
+      text: `Hello ${name}!\n \nYour password is: ${password}\n \nThanks!`,
+      subject: 'Password recovery',
+      from: 'Super Heroes List Team <superheroeslist.contato@gmail.com>',
+      to: email,
+      // html: `<p>HTML version of the message: ${password}</p>`,
+    });
+    return ({
+      type: 'ok',
+      response: { message: 'Email enviado com sucesso!' }
+    });
+  } catch (error) {
+    return { error };
+  }
+}
+
 module.exports = {
   getAllUsersService,
-  getUserByEmail,
   loginUserService,
   getUserByIdService,
   registerUserService,
   registerHeroOnListService,
   deleteHeroOfListService,
   updateUserInfosService,
+  recoverPasswordService,
 };

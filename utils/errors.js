@@ -1,26 +1,26 @@
 const contentNotFoundError = {
-  err: {
+  error: {
     type: 'not_found',
     message: 'Content not found.',
   },
 };
 
 const invalidIdError = {
-  err: {
+  error: {
     type: 'invalid_data',
     message: 'Id not valid.',
   },
 };
 
 const userExistsError = {
-  err: {
+  error: {
     type: 'invalid_data',
     message: 'User already exists.',
   },
 };
 
 const userUnexistsError = {
-  err: {
+  error: {
     type: 'invalid_data',
     message: 'User or password incorrect.',
   },

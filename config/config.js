@@ -2,10 +2,10 @@ require('dotenv').config();
 
 module.exports = {
   development: {
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    host: process.env.HOSTNAME,
+    username: process.env.SQL_USER,
+    password: process.env.SQL_PASSWORD,
+    database: process.env.SQL_DATABASE,
+    host: process.env.SQL_HOSTNAME,
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
@@ -14,10 +14,10 @@ module.exports = {
     },
   },
   test: {
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    host: process.env.HOSTNAME,
+    username: process.env.SQL_TEST_USER,
+    password: process.env.SQL_TEST_PASSWORD,
+    database: process.env.SQL_TEST_DATABASE,
+    host: process.env.SQL_TEST_HOSTNAME,
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
