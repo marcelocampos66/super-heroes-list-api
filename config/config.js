@@ -26,10 +26,10 @@ module.exports = {
     },
   },
   production: {
-    username: process.env.MYSQL_USER,
-    password: process.env.MYSQL_PASSWORD,
-    database: process.env.MYSQL_DATABASE,
-    host: process.env.HOSTNAME,
+    username: process.env.SQL_USER,
+    password: process.env.SQL_PASSWORD,
+    database: process.env.SQL_DATABASE,
+    host: process.env.SQL_HOSTNAME,
     dialect: 'postgres',
     dialectOptions: {
       ssl: {
